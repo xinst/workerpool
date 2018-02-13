@@ -7,7 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"xinxinst/workerpool"
+
+	"github.com/xinst/workerpool"
 )
 
 // DownloadTask defined your task
