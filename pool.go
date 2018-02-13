@@ -103,4 +103,5 @@ func (wp *WorkerPool) Start() error {
 // Stop the pool
 func (wp *WorkerPool) Stop() {
 	close(wp.shutDownChannel)
+	wp.workerMgr.Close()
 }

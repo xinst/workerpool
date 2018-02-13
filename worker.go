@@ -2,6 +2,7 @@ package workerpool
 
 import (
 	"errors"
+	"sync"
 	"sync/atomic"
 )
 
@@ -49,6 +50,9 @@ type WorkerManager struct {
 
 	// wait for the available resources until the channel closed
 	waitIfNoWorker bool
+
+	// sync.group wait
+	wg sync.WaitGroup
 }
 
 // NewWorkerMgr create a manager with workerSize, if possible it will create a new worker temporarily
@@ -82,6 +86,7 @@ func NewWorkerMgr(workerSize uint32, waitIfNoWorker, allowTempExceedCap bool, ne
 // or the channel is closed
 func (wm *WorkerManager) GetWorker() (Worker, error) {
 	atomic.AddInt32(&wm.used, 1)
+	wm.wg.Add(1)
 
 	if wm.waitIfNoWorker {
 		s, more := <-wm.freeList
@@ -110,6 +115,8 @@ func (wm *WorkerManager) GetWorker() (Worker, error) {
 // it is important if you set allowTempExceedCap is true
 func (wm *WorkerManager) PutWorker(worker Worker) {
 	atomic.AddInt32(&wm.used, -1)
+	wm.wg.Done()
+
 	if worker == nil {
 		return
 	}
@@ -124,4 +131,5 @@ func (wm *WorkerManager) PutWorker(worker Worker) {
 // Close can close the Channel
 func (wm *WorkerManager) Close() {
 	close(wm.freeList)
+	wm.wg.Wait()
 }
