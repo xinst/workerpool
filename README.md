@@ -1,7 +1,9 @@
 # WorkerPool
 
 
-[![License GPL v3](https://www.gnu.org/graphics/license-logos-by-christian-candena-cc-by.svg](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GoDoc](https://godoc.org/github.com/xinst/workerpool?status.svg)](https://godoc.org/github.com/xinst/workerpool) [![Go Report Card](https://goreportcard.com/report/github.com/xinst/workerpool)](https://goreportcard.com/report/github.com/xinst/workerpool) [![Build Status](https://travis-ci.org/xinst/workerpool.svg?branch=master)](https://travis-ci.org/xinst/workerpool) 
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-green.svg)](https://www.gnu.org/licenses/gpl-3.0) [![GoDoc](https://godoc.org/github.com/xinst/workerpool?status.svg)](https://godoc.org/github.com/xinst/workerpool)
+[![Go Report Card](https://goreportcard.com/report/github.com/xinst/workerpool)](https://goreportcard.com/report/github.com/xinst/workerpool)
+[![Build Status](https://travis-ci.org/xinst/workerpool.svg?branch=master)](https://travis-ci.org/xinst/workerpool)
 
 A customizable worker pool, do task async with workers.  
 For simple use, you only need create your task struct and the Do method.
