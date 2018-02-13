@@ -33,8 +33,7 @@ func (dw *DefaultWorker) Close() error {
 	return nil
 }
 
-// WorkerManager define your self WorkerManager and impl the Creater interface
-// to create the specific worker to do your task
+// WorkerManager create the specific worker to do your task
 type WorkerManager struct {
 	// freeList the free worker list
 	freeList chan Worker

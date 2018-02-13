@@ -3,16 +3,11 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/xinst/workerpool"
 )
 
-// custom your Task
-// =============================================
 // DownloadTask defined your task
 type DownloadTask struct {
 	index int
@@ -27,8 +22,6 @@ func (dt *DownloadTask) Do() error {
 	return nil
 }
 
-// custom your worker
-// =============================================
 // Download worker
 type DownloadWorker struct {
 }
@@ -39,12 +32,12 @@ func (dw *DownloadWorker) Work(task workerpool.Task) {
 	task.Do()
 }
 
-// Close func will be called when the worker is destory
+// Close func will be called when the worker is destroy
 func (dw *DownloadWorker) Close() error {
 	return nil
 }
 
-func main() {
+func advanceTest() {
 
 	mgr := workerpool.NewWorkerMgr(3, false, false, func() workerpool.Worker {
 		return &DownloadWorker{}
@@ -63,8 +56,4 @@ func main() {
 		}
 		wp.PushTask(task)
 	}
-
-	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, os.Interrupt, os.Kill, syscall.SIGTERM)
-	<-sig
 }
