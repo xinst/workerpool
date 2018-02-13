@@ -55,7 +55,7 @@ type WorkerManager struct {
 // the newFun defined a func to new a worker impl the worker interface, if it is nil, will use DefaultWorker
 // if the waitIfNoWorker is true, it will block at GetWorker() until there is a available worker
 // if the allowTempExceedCap is true, it will temporarily out of size the workerSize, it is not under control
-func NewWorkerMgr(workerSize int, waitIfNoWorker, allowTempExceedCap bool, newFun func() Worker) *WorkerManager {
+func NewWorkerMgr(workerSize uint32, waitIfNoWorker, allowTempExceedCap bool, newFun func() Worker) *WorkerManager {
 	wm := &WorkerManager{
 		freeList:           make(chan Worker, workerSize),
 		used:               0,
@@ -71,7 +71,7 @@ func NewWorkerMgr(workerSize int, waitIfNoWorker, allowTempExceedCap bool, newFu
 		wm.newFun = newFun
 	}
 
-	for index := 0; index < workerSize; index++ {
+	for index := 0; index < int(workerSize); index++ {
 		wm.freeList <- wm.newFun()
 	}
 

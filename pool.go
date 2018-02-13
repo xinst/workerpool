@@ -17,12 +17,16 @@ type WorkerPool struct {
 	taskChannel     chan Task     //task Channel,buffered
 	queuedTask      int32         // The number of task queued
 
-	taskQueueCap int32          // The max number of task can store in the queue.
+	taskQueueCap uint32         // The max number of task can store in the queue.
 	workerMgr    *WorkerManager // WorkerManager
 }
 
 // NewWorkerPoolWithDefault new a WorkerPool with DefaultWorker
-func NewWorkerPoolWithDefault(taskQueueCapacity int32, workerSize int, waitIfNoWorker, allowTempExceedCap bool) *WorkerPool {
+func NewWorkerPoolWithDefault(taskQueueCapacity uint32, workerSize uint32, waitIfNoWorker, allowTempExceedCap bool) *WorkerPool {
+
+	if taskQueueCapacity == 0 || workerSize == 0 {
+		return nil
+	}
 
 	wp := &WorkerPool{
 		shutDownChannel: make(chan struct{}),
@@ -34,7 +38,7 @@ func NewWorkerPoolWithDefault(taskQueueCapacity int32, workerSize int, waitIfNoW
 }
 
 // NewWorkerPool new a WorkerPool
-func NewWorkerPool(taskQueueCapacity int32, workerMgr *WorkerManager) *WorkerPool {
+func NewWorkerPool(taskQueueCapacity uint32, workerMgr *WorkerManager) *WorkerPool {
 
 	wp := &WorkerPool{
 		shutDownChannel: make(chan struct{}),

@@ -5,9 +5,9 @@ import (
 	"math/rand"
 	"os"
 	"os/signal"
-	"stack/workerpool"
 	"syscall"
 	"time"
+	"xinxinst/workerpool"
 )
 
 // DownloadTask defined your task
@@ -18,8 +18,7 @@ type DownloadTask struct {
 // Do method is implied the interface of workerpool.Task
 // you can define a result channel to recv the task result if you like
 func (dt *DownloadTask) Do() error {
-
-	// random sleep Second
+	// random sleep Seconds
 	time.Sleep(time.Duration(rand.Intn(10)) * time.Second)
 	fmt.Printf("%d Download task done\n", dt.index)
 	return nil
