@@ -22,7 +22,7 @@ func (dt *DownloadTask) Do() error {
 	return nil
 }
 
-// DownloadWorker
+// DownloadWorker struct
 type DownloadWorker struct {
 }
 
