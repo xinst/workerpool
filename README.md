@@ -1,7 +1,8 @@
 # WorkerPool
 
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-green.svg)](https://www.gnu.org/licenses/gpl-3.0) [![GoDoc](https://godoc.org/github.com/xinst/workerpool?status.svg)](https://godoc.org/github.com/xinst/workerpool)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GoDoc](https://godoc.org/github.com/xinst/workerpool?status.svg)](https://godoc.org/github.com/xinst/workerpool)
 [![Go Report Card](https://goreportcard.com/badge/github.com/xinst/workerpool)](https://goreportcard.com/report/github.com/xinst/workerpool)
 [![Build Status](https://travis-ci.org/xinst/workerpool.svg?branch=master)](https://travis-ci.org/xinst/workerpool)
 
