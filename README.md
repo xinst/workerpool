@@ -1,5 +1,7 @@
 # WorkerPool
 
+[![Join the chat at https://gitter.im/workerpool/Lobby](https://badges.gitter.im/workerpool/Lobby.svg)](https://gitter.im/workerpool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 [![GoDoc](https://godoc.org/github.com/xinst/workerpool?status.svg)](https://godoc.org/github.com/xinst/workerpool)
