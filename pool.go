@@ -82,9 +82,14 @@ func (wp *WorkerPool) Start() error {
 				}
 
 				if worker != nil {
-					t, isClosed := <-wp.taskChannel
-					if !isClosed {
+					t, ok := <-wp.taskChannel
+					if !ok {
 						fmt.Println("task channel has benn closed")
+						// do all the task in taskChannel
+						for task := range wp.taskChannel {
+							atomic.AddInt32(&wp.queuedTask, -1)
+							worker.Work(task)
+						}
 						wp.workerMgr.PutWorker(worker)
 						return
 					}
