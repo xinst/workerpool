@@ -1,10 +1,12 @@
 # WorkerPool
 
-
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 [![GoDoc](https://godoc.org/github.com/xinst/workerpool?status.svg)](https://godoc.org/github.com/xinst/workerpool)
 [![Go Report Card](https://goreportcard.com/badge/github.com/xinst/workerpool)](https://goreportcard.com/report/github.com/xinst/workerpool)
 [![Build Status](https://travis-ci.org/xinst/workerpool.svg?branch=master)](https://travis-ci.org/xinst/workerpool)
+![Version](https://img.shields.io/badge/version-1.0-brightgreen.svg)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/workerpool/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+
 
 A customizable worker pool, do task async with workers.  
 For simple use, you only need create your task struct and the Do method.
