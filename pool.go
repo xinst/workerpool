@@ -51,14 +51,18 @@ func NewWorkerPool(taskQueueCapacity uint32, workerMgr *WorkerManager) *WorkerPo
 
 // PushTask put the task into taskList
 func (wp *WorkerPool) PushTask(task Task) error {
-
-	if len(wp.taskChannel) >= int(wp.taskQueueCap) {
-		return ErrTaskQueueIsFull
+	var ok bool
+	select {
+	case wp.taskChannel <- task:
+		ok = true
+	default:
+		ok = false
 	}
-	wp.taskChannel <- task
-	atomic.AddInt32(&wp.queuedTask, 1)
-
-	return nil
+	if ok {
+		atomic.AddInt32(&wp.queuedTask, 1)
+		return nil
+	}
+	return ErrTaskQueueIsFull
 }
 
 // Start return error is there something error
