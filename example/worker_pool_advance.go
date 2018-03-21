@@ -61,7 +61,7 @@ func advanceTest() {
 			index: index,
 			wg : &wg,
 		}
-		wp.PushTask(task)
+		wp.PushTask(task,true)
 	}
 	wg.Wait()
 	fmt.Println("all tasks have done")

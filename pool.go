@@ -53,7 +53,7 @@ func NewWorkerPool(taskQueueCapacity uint32, workerMgr *WorkerManager) *WorkerPo
 }
 
 // PushTask put the task into taskList
-func (wp *WorkerPool) PushTask(task Task) error {
+func (wp *WorkerPool) PushTask(task Task, block bool) error {
 	var ok bool
 	select {
 	case wp.taskChannel <- task:
@@ -62,6 +62,12 @@ func (wp *WorkerPool) PushTask(task Task) error {
 		ok = false
 	}
 	if ok {
+		atomic.AddInt32(&wp.queuedTask, 1)
+		return nil
+	}
+
+	if block {
+		wp.taskChannel <- task		
 		atomic.AddInt32(&wp.queuedTask, 1)
 		return nil
 	}
