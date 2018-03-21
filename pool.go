@@ -22,7 +22,10 @@ type WorkerPool struct {
 }
 
 // NewWorkerPoolWithDefault new a WorkerPool with DefaultWorker
-func NewWorkerPoolWithDefault(taskQueueCapacity uint32, workerSize uint32, waitIfNoWorker, allowTempExceedCap bool) *WorkerPool {
+// taskQueueCapacity is the task cache size, usually it should be bigger and bigger
+// workerSize is the worker Do the task in concurrency
+// allowTempExceedCap can temporary exceed the workerSize
+func NewWorkerPoolWithDefault(taskQueueCapacity uint32, workerSize uint32, allowTempExceedCap bool) *WorkerPool {
 
 	if taskQueueCapacity == 0 || workerSize == 0 {
 		return nil
@@ -32,7 +35,7 @@ func NewWorkerPoolWithDefault(taskQueueCapacity uint32, workerSize uint32, waitI
 		shutDownChannel: make(chan struct{}),
 		taskChannel:     make(chan Task, taskQueueCapacity),
 		taskQueueCap:    taskQueueCapacity,
-		workerMgr:       NewWorkerMgr(workerSize, waitIfNoWorker, allowTempExceedCap, nil),
+		workerMgr:       NewWorkerMgr(workerSize, allowTempExceedCap, nil),
 	}
 	return wp
 }
@@ -69,7 +72,7 @@ func (wp *WorkerPool) PushTask(task Task) error {
 func (wp *WorkerPool) Start() error {
 	// check the work pool, if something err return
 	go func() {
-		fmt.Println("workpool is start")
+		//fmt.Println("workpool is start")
 		for {
 			select {
 			case <-wp.shutDownChannel:
@@ -84,7 +87,7 @@ func (wp *WorkerPool) Start() error {
 				if worker != nil {
 					t, ok := <-wp.taskChannel
 					if !ok {
-						fmt.Println("task channel has benn closed")
+						//fmt.Println("task channel has benn closed")
 						// do all the task in taskChannel
 						for task := range wp.taskChannel {
 							atomic.AddInt32(&wp.queuedTask, -1)
@@ -99,8 +102,6 @@ func (wp *WorkerPool) Start() error {
 						worker.Work(task)
 						mgr.PutWorker(worker)
 					}(t, worker, wp.workerMgr)
-				} else {
-					wp.workerMgr.PutWorker(worker)
 				}
 			}
 		}

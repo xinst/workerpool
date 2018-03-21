@@ -47,9 +47,6 @@ type WorkerManager struct {
 	//Allow temporarily exceed cap
 	allowTempExceedCap bool
 
-	// wait for the available resources until the channel closed
-	waitIfNoWorker bool
-
 	// sync.group wait
 	wg sync.WaitGroup
 }
@@ -58,12 +55,11 @@ type WorkerManager struct {
 // the newFun defined a func to new a worker impl the worker interface, if it is nil, will use DefaultWorker
 // if the waitIfNoWorker is true, it will block at GetWorker() until there is a available worker
 // if the allowTempExceedCap is true, it will temporarily out of size the workerSize, it is not under control
-func NewWorkerMgr(workerSize uint32, waitIfNoWorker, allowTempExceedCap bool, newFun func() Worker) *WorkerManager {
+func NewWorkerMgr(workerSize uint32, allowTempExceedCap bool, newFun func() Worker) *WorkerManager {
 	wm := &WorkerManager{
 		freeList:           make(chan Worker, workerSize),
 		used:               0,
 		allowTempExceedCap: allowTempExceedCap,
-		waitIfNoWorker:     waitIfNoWorker,
 	}
 
 	if newFun == nil {
@@ -84,25 +80,26 @@ func NewWorkerMgr(workerSize uint32, waitIfNoWorker, allowTempExceedCap bool, ne
 // GetWorker will return an available worker or an error is there is no worker can be use
 // or the channel is closed
 func (wm *WorkerManager) GetWorker() (Worker, error) {
-	atomic.AddInt32(&wm.used, 1)
-	wm.wg.Add(1)
-
-	if wm.waitIfNoWorker {
-		s, more := <-wm.freeList
-		if s == nil || !more {
-			return nil, errors.New("pool has been closed")
-		}
-		return s, nil
-	}
+	// if wm.waitIfNoWorker {
+	// 	s, more := <-wm.freeList
+	// 	if s == nil || !more {
+	// 		return nil, errors.New("pool has been closed")
+	// 	}
+	// 	return s, nil
+	// }
 
 	select {
 	case s, more := <-wm.freeList:
 		if s == nil || !more {
 			return nil, errors.New("pool has been closed")
 		}
+		atomic.AddInt32(&wm.used, 1)
+		wm.wg.Add(1)
 		return s, nil
 	default:
 		if wm.allowTempExceedCap {
+			atomic.AddInt32(&wm.used, 1)
+			wm.wg.Add(1)
 			return wm.newFun(), nil
 		}
 	}
