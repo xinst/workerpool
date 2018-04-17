@@ -40,6 +40,8 @@ type WorkerManager struct {
 
     // hold the worker size
     used int32
+    // the worker pool stopped
+    stopped int32
 
     // the fun to new a worker
     newFun func() Worker
@@ -116,7 +118,9 @@ func (wm *WorkerManager) PutWorker(worker Worker) {
     if worker == nil {
         return
     }
-
+    if atomic.LoadInt32(&wm.stopped) != 0 {
+        return
+    }
     select {
     case wm.freeList <- worker:
     default:
@@ -126,6 +130,10 @@ func (wm *WorkerManager) PutWorker(worker Worker) {
 
 // Close can close the Channel
 func (wm *WorkerManager) Close() {
+    if atomic.LoadInt32(&wm.stopped) != 0 {
+        return
+    }
+    atomic.StoreInt32(&wm.stopped, 1)
     close(wm.freeList)
     wm.wg.Wait()
 }
